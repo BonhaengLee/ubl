@@ -1,2 +1,11 @@
+.highlight-container {
+  border: 0.1em solid black;
+  border-radius: 0.25em;
+  box-shadow: 0 0 0 999999px rgba(0, 0, 0, 0.3);
+  z-index: 99999;
+  position: absolute;
+}
 
-
+.highlight-container.hide {
+  border: none;
+}
