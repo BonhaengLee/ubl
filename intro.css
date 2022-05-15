@@ -17,6 +17,9 @@
   border-radius: 0.25em;
   max-width: 200px;
   z-index: 9001;
+  opacity: 0;
+  transform: scale(0);
+  transition: 150ms ease-in-out;
 }
 
 .modal.center {
