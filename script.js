@@ -34,7 +34,9 @@ class Modal {
 
     this.#nextBtn = document.createElement("button");
     this.#nextBtn.textContent = "Next";
-    this.#modal.append(this.#nextBtn);
+    this.#footer.append(this.#nextBtn);
+
+    document.body.append(this.#modal);
   }
 
   set title(value) {
@@ -46,7 +48,11 @@ class Modal {
   }
 
   show() {
-    this.#modal.classList.show();
+    this.#modal.classList.add("show");
+  }
+
+  center() {
+    this.#modal.classList.add("center");
   }
 }
 
@@ -60,22 +66,21 @@ class Intro {
   start() {
     this.currentStepIndex = 0;
     this.#modal = new Modal();
+    this.#showCurrentStep();
+  }
+
+  get #currentStep() {
+    return this.steps[this.currentStepIndex];
   }
 
   #showCurrentStep() {
     this.#modal.show();
-  }
-
-  #createModal() {
-    const modal = document.createElement("div");
-    modal.classList.add("modal");
-
-    const closeBtn = document.createElement("button");
-    closeBtn.innerHTML = "&times;";
-    closeBtn.classList.add("close-btn");
-    modal.append(closeBtn);
-
-    return modal;
+    this.#modal.title = this.#currentStep.title;
+    this.#modal.body = this.#currentStep.body;
+    if (this.#currentStep.element === null) {
+      this.#modal.center();
+    } else {
+    }
   }
 }
 
