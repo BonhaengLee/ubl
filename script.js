@@ -54,10 +54,15 @@ class Modal {
   center() {
     this.#modal.classList.add("center");
   }
+
+  enableBackButton(enabled) {
+    this.#backBtn.disabled = !enabled;
+  }
 }
 
 class Intro {
   #modal;
+  #highlightContainer;
 
   constructor(steps) {
     this.steps = steps;
@@ -66,6 +71,7 @@ class Intro {
   start() {
     this.currentStepIndex = 0;
     this.#modal = new Modal();
+    this.#highlightContainer = this.#createHighlightContainer();
     this.#showCurrentStep();
   }
 
@@ -75,12 +81,21 @@ class Intro {
 
   #showCurrentStep() {
     this.#modal.show();
+    this.#modal.enableBackButton(this.currentStepIndex !== 0);
     this.#modal.title = this.#currentStep.title;
     this.#modal.body = this.#currentStep.body;
     if (this.#currentStep.element === null) {
+      this.#highlightContainer.classList.add("hide");
       this.#modal.center();
     } else {
     }
+  }
+
+  #createHighlightContainer() {
+    const highlightContainer = document.createElement("div");
+    highlightContainer.classList.add("highlight-container");
+    document.body.append(highlightContainer);
+    return highlightContainer;
   }
 }
 
