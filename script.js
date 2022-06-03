@@ -7,7 +7,7 @@ class Modal {
   #backBtn;
   #nextBtn;
 
-  constructor() {
+  constructor(onBack, onNext) {
     this.#modal = document.createElement("div");
     this.#modal.classList.add("modal");
 
@@ -30,10 +30,12 @@ class Modal {
 
     this.#backBtn = document.createElement("button");
     this.#backBtn.textContent = "Back";
+    this.#backBtn.addEventListener("click", onBack);
     this.#footer.append(this.#backBtn);
 
     this.#nextBtn = document.createElement("button");
     this.#nextBtn.textContent = "Next";
+    this.#nextBtn.addEventListener("click", onNext);
     this.#footer.append(this.#nextBtn);
 
     document.body.append(this.#modal);
@@ -55,6 +57,10 @@ class Modal {
     this.#modal.classList.add("center");
   }
 
+  remove() {
+    this.#modal.remove();
+  }
+
   enableBackButton(enabled) {
     this.#backBtn.disabled = !enabled;
   }
@@ -70,9 +76,27 @@ class Intro {
 
   start() {
     this.currentStepIndex = 0;
-    this.#modal = new Modal();
+    this.#modal = new Modal(
+      () => {
+        this.currentStepIndex--;
+        this.#showCurrentStep();
+      },
+      () => {
+        this.currentStepIndex++;
+        if (this.currentStepIndex >= this.steps.length) {
+          this.finish();
+        } else {
+          this.#showCurrentStep();
+        }
+      }
+    );
     this.#highlightContainer = this.#createHighlightContainer();
     this.#showCurrentStep();
+  }
+
+  finish() {
+    this.#modal.remove();
+    this.#highlightContainer.remove();
   }
 
   get #currentStep() {
@@ -103,6 +127,10 @@ const intro = new Intro([
   {
     title: "Test title",
     body: "This is the body of the modal",
+  },
+  {
+    title: "Test title 2",
+    body: "This is the body of the modal 2",
   },
 ]);
 intro.start();
