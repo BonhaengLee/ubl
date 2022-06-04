@@ -5,6 +5,8 @@
   z-index: 9000;
   position: absolute;
   transition: 250ms ease-in-out;
+  padding: 0.25rem;
+  transform: translate(-0.25rem, -0.25rem);
 }
 
 .highlight-container.hide {

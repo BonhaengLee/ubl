@@ -7,13 +7,14 @@ class Modal {
   #backBtn;
   #nextBtn;
 
-  constructor(onBack, onNext) {
+  constructor(onBack, onNext, onClose) {
     this.#modal = document.createElement("div");
     this.#modal.classList.add("modal");
 
     this.#closeBtn = document.createElement("button");
     this.#closeBtn.innerHTML = "&times;";
     this.#closeBtn.classList.add("close-btn");
+    this.#closeBtn.addEventListener("click", onClose);
     this.#modal.append(this.#closeBtn);
 
     this.#title = document.createElement("div");
@@ -65,7 +66,7 @@ class Modal {
     );
     this.#modal.style.setProperty(
       "--y",
-      `calc(${bottom + window.scrollY}px + ${offset})`
+      `calc(${bottom + window.scrollY}px + ${offset} + .25rem)`
     );
   }
 
@@ -81,9 +82,21 @@ class Modal {
 class Intro {
   #modal;
   #highlightContainer;
+  #bodyClick;
 
   constructor(steps) {
     this.steps = steps;
+    this.#bodyClick = (e) => {
+      if (
+        e.target === this.#currentStep.element ||
+        this.#currentStep.element?.contains(e.target) ||
+        e.target.matches(".modal") ||
+        e.target.closest(".modal") !== null
+      ) {
+        return;
+      }
+      this.finish();
+    };
   }
 
   start() {
@@ -100,14 +113,18 @@ class Intro {
         } else {
           this.#showCurrentStep();
         }
-      }
+      },
+      () => this.finish()
     );
+    document.addEventListener("click", this.#bodyClick);
     this.#highlightContainer = this.#createHighlightContainer();
     this.#showCurrentStep();
   }
 
   finish() {
+    document.removeEventListener("click", this.#bodyClick);
     this.#modal.remove();
+
     this.#highlightContainer.remove();
   }
 
