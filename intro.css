@@ -4,6 +4,7 @@
   box-shadow: 0 0 0 999999px rgba(0, 0, 0, 0.3);
   z-index: 9000;
   position: absolute;
+  transition: 250ms ease-in-out;
 }
 
 .highlight-container.hide {
@@ -11,27 +12,24 @@
 }
 
 .modal {
+  top: var(--y, 50%);
+  left: var(--x, 50%);
   background-color: white;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  position: absolute;
   border: 1px solid #777;
   border-radius: 0.25em;
   max-width: 200px;
   z-index: 9001;
   opacity: 0;
-  /* transform: scale(0); */
+  transform: scale(var(--scale)) translate(var(--translate));
   transition: 150ms ease-in-out;
 }
 
 .modal.center {
   --translate: -50%, -50%;
   position: fixed;
-  /* --y: 50% !important;
-  --x: 50% !important; */
-  top: 50%;
-  left: 50%;
+  --y: 50% !important;
+  --x: 50% !important;
 }
 
 .modal.show {

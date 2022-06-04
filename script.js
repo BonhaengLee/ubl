@@ -49,12 +49,24 @@ class Modal {
     this.#body.innerText = value;
   }
 
-  show() {
-    this.#modal.classList.add("show");
+  show(value = true) {
+    this.#modal.classList.toggle("show", value);
   }
 
-  center() {
-    this.#modal.classList.add("center");
+  center(value = true) {
+    this.#modal.classList.toggle("center", value);
+  }
+
+  position({ bottom, left }) {
+    const offset = ".5rem";
+    this.#modal.style.setProperty(
+      "--x",
+      `calc(${left + window.scrollX}px + ${offset})`
+    );
+    this.#modal.style.setProperty(
+      "--y",
+      `calc(${bottom + window.scrollY}px + ${offset})`
+    );
   }
 
   remove() {
@@ -108,10 +120,26 @@ class Intro {
     this.#modal.enableBackButton(this.currentStepIndex !== 0);
     this.#modal.title = this.#currentStep.title;
     this.#modal.body = this.#currentStep.body;
-    if (this.#currentStep.element === null) {
+    if (this.#currentStep.element == null) {
       this.#highlightContainer.classList.add("hide");
+      this.#positionHighlightContainer({
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+      });
       this.#modal.center();
     } else {
+      this.#modal.center(false);
+      const rect = this.#currentStep.element.getBoundingClientRect();
+      this.#modal.position(rect);
+      this.#highlightContainer.classList.remove("hide");
+      this.#positionHighlightContainer(rect);
+      this.#currentStep.element.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center",
+      });
     }
   }
 
@@ -120,6 +148,13 @@ class Intro {
     highlightContainer.classList.add("highlight-container");
     document.body.append(highlightContainer);
     return highlightContainer;
+  }
+
+  #positionHighlightContainer(rect) {
+    this.#highlightContainer.style.top = `${rect.top + window.scrollY}px`;
+    this.#highlightContainer.style.left = `${rect.left + window.scrollX}px`;
+    this.#highlightContainer.style.width = `${rect.width}px`;
+    this.#highlightContainer.style.height = `${rect.height}px`;
   }
 }
 
@@ -131,6 +166,12 @@ const intro = new Intro([
   {
     title: "Test title 2",
     body: "This is the body of the modal 2",
+    element: document.querySelector("[data-first]"),
+  },
+  {
+    title: "Test title 3",
+    body: "This is the body of the modal 3",
+    element: document.querySelector("[data-second]"),
   },
 ]);
 intro.start();
